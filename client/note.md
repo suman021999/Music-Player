@@ -1,0 +1,1 @@
+npm i react-router-dom react-icons react-custom-scrollbars-2 axios
