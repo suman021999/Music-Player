@@ -17,14 +17,11 @@ const Player = () => {
         </div>
 
         <div className="w-screen mt-3">
-          <div className="flex ml-10  ">
+          <div className="flex mx-10 justify-between items-center">
           <Artist />
-
-        <div className="flex justify-between bg-slate-400 w-screen mx-8 h-12">
-          
           <Play/>
           <Sound />
-        </div>
+        
           </div>
         
 
