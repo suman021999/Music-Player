@@ -1,8 +1,8 @@
 import Router from 'express'
-import { created } from '../controller/music.controller'
+import { upload } from '../controller/music.controller.js'
 
 const router=Router()
 
-router.route('/create').post(created)
+router.route('/upload').post(upload)
 
 export default router

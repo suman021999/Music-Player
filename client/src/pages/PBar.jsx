@@ -5,7 +5,7 @@ import Pnavbar from "../components/Paylist/Pnavbar";
 const PBar = () => {
   return (
     <>
-      <section className="h-[85vh] w-[80vw] bg-background">
+      <section className="h-[85vh] w-[80vw] ">
         <Pnavbar />
         <Playlist />
       </section>
