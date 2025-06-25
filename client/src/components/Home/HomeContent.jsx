@@ -4,6 +4,7 @@ import { cardData } from "../../data";
 
 
 
+
 const Home = () => {
   
   return ( 
@@ -18,8 +19,6 @@ const Home = () => {
           <div  className="overflow-y-auto tasklist w-[75vw] mb-2">
             <div className="flex justify-center">
               <div className="flex flex-wrap  justify-center  gap-y-4 gap-x-2  w-[45vw] my-10 items-center">
-
-
 
 
                 {

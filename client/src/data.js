@@ -180,20 +180,5 @@ export const cardData=[
     },{
         img:"https://cdn.britannica.com/10/250610-050-BC5CCDAF/Zebra-finch-Taeniopygia-guttata-bird.jpg",
         text:"hamingbard"
-    },
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
+    }, 
 ]

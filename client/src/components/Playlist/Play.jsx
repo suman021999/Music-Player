@@ -9,7 +9,7 @@ const Play = () => {
   
   return (
     <>
-      <div className='flex items-center w-56 mr-4 ml-8'>
+      <div className='flex items-center w-56 mr-32 '>
        <MdSkipPrevious /> 
        
           <button onClick={() => setIstrue(!istrue)} className='border-[#3672b3] p-2 rounded-full border-4 flex items-center justify-center'>

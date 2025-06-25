@@ -25,4 +25,3 @@ const Mainpage = () => {
 }
 
 export default Mainpage
-//bg-background
