@@ -1,7 +1,7 @@
 import express from "express"
 import dotenv from "dotenv"
 import MusicRouter from './router/play.route.js'
-import cors from "cors";
+// import cors from "cors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import database from "./db/database.js";
@@ -11,24 +11,25 @@ const app=express()
 dotenv.config()
 database()
 
-app.use(
-    cors({
-      origin: ["http://localhost:3000"],
-      credentials: true,
-    })
-  );
+// app.use(
+//     cors({
+//       origin: ["http://localhost:8000"],
+//       credentials: true,
+//     })
+//   );
 
-app.use(express())
+app.use(express.json())
 app.use(cookieParser())
 
 app.use(express.urlencoded({ extended: false }));
 
 app.use(bodyParser.json())
 
-app.use("/api/v1/user",MusicRouter)
+app.use("/api/v1/",MusicRouter)
 
 
-const PORT=process.env.PORT||3000 
 
-app.listen(console.log(`server run on ${PORT}`))
+const PORT=process.env.PORT || 3000
 
+
+app.listen(PORT, () => console.log(`server run on ${PORT}`))
