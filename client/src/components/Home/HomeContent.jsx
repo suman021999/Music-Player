@@ -1,41 +1,95 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "./Card";
-
-// const API_URL = import.meta.env.VITE_AUTH_URL
-
+import axios from "axios";
+import Navbar from "./Navbar";
 
 const Home = () => {
+  const [musicList, setMusicList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState(null);
 
-  
-  
+  const fetchMusic = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_AUTH_URL}/`);
+      if (response.data.success) {
+        setMusicList(response.data.data);
+      } else {
+        throw new Error(response.data.message || 'Failed to load music');
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      setError(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFileSelect = async (newFile) => {
+    setUploading(true);
+    try {
+      setMusicList(prev => [newFile, ...prev]);
+    } catch (error) {
+      console.error('Error adding file:', error);
+      setError('Failed to add file to list');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMusic();
+  }, []);
+
   return ( 
     <>
-      <section className=" h-[65vh] w-[80vw]  overflow-hidden items-start text-lg">
-        <div className="relative overflow-hidden w-full h-full  flex justify-center">
-
-
-       
-
-          
-          <div  className="overflow-y-auto tasklist w-[75vw] mb-2">
+      <Navbar onFileSelect={handleFileSelect} />
+      <section className="h-[65vh] w-[80vw] overflow-hidden items-start text-lg">
+        <div className="relative overflow-hidden w-full h-full flex justify-center">
+          <div className="overflow-y-auto tasklist w-[75vw] mb-2">
             <div className="flex justify-center">
-              <div className="flex flex-wrap  justify-center  gap-y-4 gap-x-2  w-[45vw] my-10 items-center">
+              <div className="flex flex-wrap justify-center gap-y-4 gap-x-2 w-[45vw] my-10 items-center">
+                {error && (
+                  <div className="text-red-500 text-center">
+                    <p>{error}</p>
+                    <button 
+                      onClick={fetchMusic}
+                      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                )}
 
-
-
-
-                {
-                  map((data,index)=>(
-                    <Card key={index} img={data.img} text={data.text}/>
+                {loading ? (
+                  <p>Loading...</p>
+                ) : uploading ? (
+                  <p>Adding new file...</p>
+                ) : musicList.length === 0 ? (
+                  <div className="text-center">
+                    <p>No music found</p>
+                    <button 
+                      onClick={fetchMusic}
+                      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      Load Music
+                    </button>
+                  </div>
+                ) : (
+                  musicList.map((data, index) => (
+                    <Card 
+                      key={index} 
+                      img={data.img || data.imageData} 
+                      text={data.text || data.originalname}
+                      // audioUrl={data.url || data.audioUrl}
+                    />
                   ))
-                }
+                )}
               </div>
             </div>
           </div>
-         
-          
-          
-
         </div>
       </section>
     </>
@@ -43,64 +97,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-// import Card from "./Card";
-
-// const Home = () => {
-//   const [musicData, setMusicData] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const fetchMusicData = async () => {
-//       try {
-//         const res = await axios.get("/api/music"); 
-//         setMusicData(res.data);
-//         setLoading(false);
-//       } catch (err) {
-//         setError(err.message);
-//         setLoading(false);
-//         console.error("Error fetching music data:", err);
-//       }
-//     };
-
-//     fetchMusicData();
-//   }, []);
-
-//   if (loading) {
-//     return <div>Loading music...</div>;
-//   }
-
-//   if (error) {
-//     return <div>Error: {error}</div>;
-//   }
-
-//   return (
-//     <>
-//       <section className="h-[65vh] w-[80vw] overflow-hidden items-start text-lg">
-//         <div className="relative overflow-hidden w-full h-full flex justify-center">
-//           <div className="overflow-y-auto tasklist w-[75vw] mb-2">
-//             <div className="flex justify-center">
-//               <div className="flex flex-wrap justify-center gap-y-4 gap-x-2 w-[45vw] my-10 items-center">
-//                 {musicData.map((data, index) => (
-//                   <Card 
-//                     key={index} 
-//                     img={data.img} // Make sure your backend returns image data
-//                     audioUrl={data.url} // The music URL from Cloudinary
-//                     text={data.text || data.originalname} // Fallback to original filename
-//                   />
-//                 ))}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-//     </>
-//   );
-// };
-
-// export default Home;

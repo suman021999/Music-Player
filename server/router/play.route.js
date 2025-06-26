@@ -4,7 +4,7 @@ import {upload} from "../utils/upload.js"
 
 const router=Router()
 
-router.route('/upl').post(upload.single("audio"),uploadMusic)
+router.route('/upload').post(upload.single("audio"),uploadMusic)
 router.route('/').get(getAllMusic);
 
 export default router

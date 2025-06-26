@@ -1,73 +1,48 @@
-// import React, { useRef, useState } from "react";
-// import File from "../../../public/file.svg";
-// import { IoIosArrowDown } from "react-icons/io";
-// import Dropdown from "./Dropdown";
-// const Navbar = () => {
-//   const [toggle,setToggle]=useState(false)
-//   const [audio, setAudio] = useState();
-//   const fileputRef = useRef(null);
-
-//   const addFile = (e) => {
-//     if (e.target.files[0]) {
-//       setAudio(URL.createObjectURL(e.target.files[0]));
-//     }
-//   };
-
-//   const handleClick = () => {
-//     fileputRef.current.click();
-//   };
-  
-//   return (
-//     <>
-//       <div className="text-color h-[20vh] w-[80vw]   ">
-//         <div className="grid grid-cols-3 h-[15vh]">
-//           <div className="flex flex-col justify-center items-center text-3xl">
-//             <h1 className="text-4xl tracking-[6px] font-bold font-Poppins">Home</h1>
-//             <p className="text-lg font-Poppins font-semibold">recent play</p>
-//           </div>
-//           <div>
-            
-//           </div>
-
-//           <div className=" h-[20vh] flex justify-center items-center  text-white text-xl">
-//             <div className=" flex items-center gap-2 border-[1px] border-color bg-[#7a7a7a75] hover:bg-[#a7a7a775] rounded-l-md  px-2 ">
-//               <img className="w-4 h-4 font-bold " src={File} alt="" />
-//               <p onClick={handleClick}> open file(s)</p>
-//               <input
-//               type="file"
-//               onChange={addFile}
-//               ref={fileputRef}
-//               style={{ display: "none" }}
-//             />
-//             </div>
-//             <div className="border-[1px] bg-[#7a7a7a75] hover:bg-[#a7a7a775] rounded-r-md   border-color py-[4px] px-2  ">
-
-//             <IoIosArrowDown onClick={()=>setToggle(!toggle)}/>
-//               {toggle?<Dropdown/>:''}
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Navbar;
 
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import File from "../../../public/file.svg";
 import { IoIosArrowDown } from "react-icons/io";
 import Dropdown from "./Dropdown";
+import axios from "axios";
 
 const Navbar = ({ onFileSelect }) => {
   const [toggle, setToggle] = useState(false);
-  const fileInputRef = React.useRef(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
-  const handleFileChange = (e) => {
-    if (e.target.files[0]) {
-      onFileSelect(e.target.files[0]);
-      setToggle(false); // Close dropdown after selection
+  const handleFileChange = async (e) => {
+    if (!e.target.files?.[0]) return;
+    
+    const file = e.target.files[0];
+    setUploading(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await axios.post(
+        `${import.meta.env.VITE_AUTH_URL}/upload`, 
+        formData, 
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+      
+      if (response.data.success) {
+        onFileSelect(response.data.data);
+        setToggle(false);
+      } else {
+        throw new Error(response.data.message || 'Upload failed');
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Upload failed: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setUploading(false);
+      e.target.value = ''; // Reset file input
     }
   };
 
@@ -86,22 +61,29 @@ const Navbar = ({ onFileSelect }) => {
 
         <div className="h-[20vh] flex justify-center items-center text-white text-xl">
           <div 
-            className="flex items-center gap-2 border-[1px] border-color bg-[#7a7a7a75] hover:bg-[#a7a7a775] rounded-l-md px-2 cursor-pointer"
-            onClick={triggerFileInput}
+            className={`flex items-center gap-2 border-[1px] border-color bg-[#7a7a7a75] hover:bg-[#a7a7a775] rounded-l-md px-2 cursor-pointer ${uploading ? 'opacity-50' : ''}`}
+            onClick={!uploading ? triggerFileInput : undefined}
           >
-            <img className="w-4 h-4 font-bold" src={File} alt="" />
-            <p>Open file(s)</p>
+            {uploading ? (
+              <span>Uploading...</span>
+            ) : (
+              <>
+                <img className="w-4 h-4 font-bold" src={File} alt="File icon" />
+                <p>Open file(s)</p>
+              </>
+            )}
             <input
               type="file"
               onChange={handleFileChange}
               ref={fileInputRef}
               className="hidden"
               accept="audio/*"
+              disabled={uploading}
             />
           </div>
           <div 
-            className="border-[1px] bg-[#7a7a7a75] hover:bg-[#a7a7a775] rounded-r-md border-color py-[4px] px-2 cursor-pointer"
-            onClick={() => setToggle(!toggle)}
+            className={`border-[1px] bg-[#7a7a7a75] hover:bg-[#a7a7a775] rounded-r-md border-color py-[4px] px-2 cursor-pointer ${uploading ? 'opacity-50' : ''}`}
+            onClick={!uploading ? () => setToggle(!toggle) : undefined}
           >
             <IoIosArrowDown />
             {toggle && <Dropdown onFileSelect={onFileSelect} />}
