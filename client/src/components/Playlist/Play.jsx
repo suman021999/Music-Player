@@ -20,7 +20,7 @@ const Play = ({ audioRef, isPlaying, setIsPlaying, handleNext, handlePrevious })
     <div className='flex items-center w-56 mr-32'>
       <button 
         onClick={handlePrevious} 
-        className="text-2xl text-white hover:text-yellow-400 transition-colors"
+        className="text-2xl text-white hover:text-blue-400 transition-colors"
       >
         <MdSkipPrevious /> 
       </button>
@@ -28,7 +28,7 @@ const Play = ({ audioRef, isPlaying, setIsPlaying, handleNext, handlePrevious })
       <button 
         onClick={togglePlay} 
         className='border-[#3672b3] p-2 rounded-full border-4 flex items-center justify-center mx-4
-        hover:border-yellow-400 transition-colors'
+        hover:border-blue-400 transition-colors'
       >
         {isPlaying ? (
           <FaPause className='h-6 w-6 text-white' />
@@ -39,7 +39,7 @@ const Play = ({ audioRef, isPlaying, setIsPlaying, handleNext, handlePrevious })
       
       <button 
         onClick={handleNext} 
-        className="text-2xl text-white hover:text-yellow-400 transition-colors"
+        className="text-2xl text-white hover:text-blue-400 transition-colors"
       >
         <MdSkipNext />
       </button>

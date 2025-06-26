@@ -1,9 +1,123 @@
 
+// import asyncHandler from 'express-async-handler';
+// import cloudinary from '../config/cloudinary.js';
+// import { Music } from '../models/music.model.js';
+// import { parseBuffer } from 'music-metadata';
+// import sharp from 'sharp'; // for image conversion
+
+// export const uploadMusic = asyncHandler(async (req, res) => {
+//   try {
+//     if (!req.file) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'No file uploaded'
+//       });
+//     }
+
+//     const file = req.file;
+
+//     if (!file.mimetype.startsWith('audio/')) {
+//       return res.status(400).json({
+//         success: false,
+//         message: `Invalid file type (${file.mimetype}). Only audio files are allowed.`,
+//       });
+//     }
+
+//     // Extract metadata including image
+//     const metadata = await parseBuffer(file.buffer, file.mimetype);
+//     let coverUrl = '';
+
+//     // Upload audio file to Cloudinary
+//     const result = await new Promise((resolve, reject) => {
+//       const uploadStream = cloudinary.uploader.upload_stream({
+//         folder: 'music_uploads',
+//         resource_type: 'auto',
+//         use_filename: true,
+//         unique_filename: true,
+//       }, (error, result) => {
+//         if (error) reject(error);
+//         else resolve(result);
+//       });
+
+//       uploadStream.end(file.buffer);
+//     });
+
+//     // Upload embedded cover art if available and convert to PNG
+//     if (metadata.common.picture && metadata.common.picture.length > 0) {
+//       const cover = metadata.common.picture[0];
+
+//       // Convert raw image buffer to PNG using sharp
+//       const convertedBuffer = await sharp(cover.data)
+//         .toFormat('png')
+//         .toBuffer();
+
+//       const uploadedCover = await new Promise((resolve, reject) => {
+//         const uploadStream = cloudinary.uploader.upload_stream({
+//           folder: 'music_covers',
+//           resource_type: 'image',
+//           format: 'png',
+//           use_filename: true,
+//           unique_filename: true,
+//         }, (error, result) => {
+//           if (error) reject(error);
+//           else resolve(result);
+//         });
+
+//         uploadStream.end(convertedBuffer);
+//       });
+
+//       coverUrl = uploadedCover.secure_url;
+//     }
+
+//     // Save to DB
+//     const music = await Music.create({
+//       audioUrl: result.secure_url,
+//       imageData: coverUrl || undefined, // fallback if no image
+//       text: req.body.text || '',
+//       originalname: file.originalname,
+//       public_id: result.public_id,
+//       format: result.format,
+//       duration: result.duration,
+//       bytes: result.bytes,
+//       mimetype: file.mimetype
+//     });
+
+//     res.status(200).json({
+//       success: true,
+//       message: 'Music file uploaded successfully',
+//       data: {
+//         public_id: music.public_id,
+//         url: music.audioUrl,
+//         img: music.imageData,
+//         text: music.text || music.originalname,
+//         format: music.format,
+//         duration: music.duration,
+//         bytes: music.bytes,
+//         mimetype: music.mimetype
+//       }
+//     });
+
+//   } catch (error) {
+//     console.error('Music Upload Error:', error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Failed to upload music file',
+//       error: process.env.NODE_ENV === 'development' ? {
+//         message: error.message,
+//         stack: error.stack
+//       } : undefined
+//     });
+//   }
+// });
+
+
+
+
 import asyncHandler from 'express-async-handler';
 import cloudinary from '../config/cloudinary.js';
 import { Music } from '../models/music.model.js';
 import { parseBuffer } from 'music-metadata';
-import sharp from 'sharp'; // for image conversion
+import sharp from 'sharp';
 
 export const uploadMusic = asyncHandler(async (req, res) => {
   try {
@@ -16,6 +130,7 @@ export const uploadMusic = asyncHandler(async (req, res) => {
 
     const file = req.file;
 
+    // Early validation
     if (!file.mimetype.startsWith('audio/')) {
       return res.status(400).json({
         success: false,
@@ -23,78 +138,52 @@ export const uploadMusic = asyncHandler(async (req, res) => {
       });
     }
 
-    // Extract metadata including image
-    const metadata = await parseBuffer(file.buffer, file.mimetype);
+    // Parallelize metadata extraction and Cloudinary upload
+    const [metadata, audioUpload] = await Promise.all([
+      parseBuffer(file.buffer, file.mimetype),
+      uploadToCloudinary(file.buffer, 'music_uploads', 'auto')
+    ]);
+
+    // Handle cover art upload if available (without blocking)
     let coverUrl = '';
-
-    // Upload audio file to Cloudinary
-    const result = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream({
-        folder: 'music_uploads',
-        resource_type: 'auto',
-        use_filename: true,
-        unique_filename: true,
-      }, (error, result) => {
-        if (error) reject(error);
-        else resolve(result);
-      });
-
-      uploadStream.end(file.buffer);
-    });
-
-    // Upload embedded cover art if available and convert to PNG
     if (metadata.common.picture && metadata.common.picture.length > 0) {
       const cover = metadata.common.picture[0];
-
-      // Convert raw image buffer to PNG using sharp
-      const convertedBuffer = await sharp(cover.data)
-        .toFormat('png')
-        .toBuffer();
-
-      const uploadedCover = await new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream({
-          folder: 'music_covers',
-          resource_type: 'image',
-          format: 'png',
-          use_filename: true,
-          unique_filename: true,
-        }, (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        });
-
-        uploadStream.end(convertedBuffer);
-      });
-
-      coverUrl = uploadedCover.secure_url;
+      try {
+        const convertedBuffer = await sharp(cover.data)
+          .toFormat('png')
+          .toBuffer();
+        
+        const uploadedCover = await uploadToCloudinary(
+          convertedBuffer, 
+          'music_covers', 
+          'image',
+          { format: 'png' }
+        );
+        coverUrl = uploadedCover.secure_url;
+      } catch (coverError) {
+        console.error('Cover art processing error:', coverError);
+        // Continue without cover art if there's an error
+      }
     }
 
     // Save to DB
     const music = await Music.create({
-      audioUrl: result.secure_url,
-      imageData: coverUrl || undefined, // fallback if no image
+      audioUrl: audioUpload.secure_url,
+      imageData: coverUrl || undefined,
       text: req.body.text || '',
       originalname: file.originalname,
-      public_id: result.public_id,
-      format: result.format,
-      duration: result.duration,
-      bytes: result.bytes,
+      public_id: audioUpload.public_id,
+      format: audioUpload.format,
+      duration: audioUpload.duration,
+      bytes: audioUpload.bytes,
       mimetype: file.mimetype
     });
 
+    // Streamlined response
     res.status(200).json({
       success: true,
       message: 'Music file uploaded successfully',
-      data: {
-        public_id: music.public_id,
-        url: music.audioUrl,
-        img: music.imageData,
-        text: music.text || music.originalname,
-        format: music.format,
-        duration: music.duration,
-        bytes: music.bytes,
-        mimetype: music.mimetype
-      }
+      data: formatMusicResponse(music)
     });
 
   } catch (error) {
@@ -109,6 +198,38 @@ export const uploadMusic = asyncHandler(async (req, res) => {
     });
   }
 });
+
+// Helper function for Cloudinary uploads
+function uploadToCloudinary(buffer, folder, resourceType, additionalOptions = {}) {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream({
+      folder,
+      resource_type: resourceType,
+      use_filename: true,
+      unique_filename: true,
+      ...additionalOptions
+    }, (error, result) => {
+      if (error) reject(error);
+      else resolve(result);
+    });
+
+    uploadStream.end(buffer);
+  });
+}
+
+// Helper function to format response
+function formatMusicResponse(music) {
+  return {
+    public_id: music.public_id,
+    url: music.audioUrl,
+    img: music.imageData,
+    text: music.text || music.originalname,
+    format: music.format,
+    duration: music.duration,
+    bytes: music.bytes,
+    mimetype: music.mimetype
+  };
+}
 
 
 
