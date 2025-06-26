@@ -131,3 +131,53 @@ export const getAllMusic = asyncHandler(async (req, res) => {
 });
 
 
+
+
+
+export const deleteMusic = asyncHandler(async (req, res) => {
+
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      message: 'Music ID is required'
+    });
+  }
+
+  try {
+    const music = await Music.findById(id);
+    if (!music) {
+      return res.status(404).json({
+        success: false,
+        message: 'Music not found'
+      });
+    }
+
+    // Only try to delete from Cloudinary if public_id exists
+    if (music.public_id) {
+      try {
+        await cloudinary.uploader.destroy(music.public_id, { resource_type: 'auto' });
+      } catch (cloudinaryError) {
+        console.error('Cloudinary deletion error:', cloudinaryError);
+        // You might want to continue with DB deletion even if Cloudinary fails
+      }
+    }
+
+    await Music.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Music deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete Music Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to delete music',
+      error: error.message
+    });
+  }
+});
+
+
