@@ -1,49 +1,12 @@
-// import React from "react";
-// import Artist from "./Artist";
-// import Sound from "./Sound";
-// import Play from "./Play";
-
-// const Player = () => {
-//   return (
-//     <>
-//       <div className="text-color h-[15vh]  w-screen bg-[#3698b3]  text-3xl">
-
-//         <div className="flex justify-center">
-//           <div className="flex items-center justify-center gap-4  mx-auto mt-4">
-//             <p className="bg-yellow-400 h-4 rounded-full w-4"></p>
-//             <hr className="h-2 w-[70vw] border-none  bg-[#4b4848cb] rounded-full" />
-//             <p className="bg-yellow-400 h-4 rounded-full w-4"></p>
-//           </div>
-//         </div>
-
-//         <div className="w-screen mt-3">
-//           <div className="flex mx-10 justify-between items-center">
-//           <Artist />
-//           <Play/>
-//           <Sound />
-        
-//           </div>
-        
-
-//         </div>
-
-//       </div>
-//     </>
-//   );
-// };
-// // bg-background
-
-// export default Player;
-
-
 import React, { useState, useEffect, useRef } from "react";
 import Artist from "./Artist";
 import Sound from "./Sound";
 import Play from "./Play";
 
-const Player = ({ currentTrack }) => {
+const Player = ({ currentTrack, tracks = [], setCurrentTrack }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -58,6 +21,18 @@ const Player = ({ currentTrack }) => {
       audioRef.current.addEventListener('timeupdate', updateTime);
       audioRef.current.addEventListener('loadedmetadata', updateTime);
       
+      // Auto-play when track changes
+      const playAudio = async () => {
+        try {
+          await audioRef.current.play();
+          setIsPlaying(true);
+        } catch (error) {
+          console.error("Autoplay prevented:", error);
+        }
+      };
+      
+      playAudio();
+      
       return () => {
         audioRef.current.removeEventListener('timeupdate', updateTime);
         audioRef.current.removeEventListener('loadedmetadata', updateTime);
@@ -67,18 +42,53 @@ const Player = ({ currentTrack }) => {
 
   const formatTime = (seconds) => {
     if (isNaN(seconds)) return '0:00';
-    const minutes = Math.floor(seconds / 60);
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    } else {
+      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
   };
 
   const handleProgressClick = (e) => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || !duration) return;
     const progressBar = e.currentTarget;
     const clickPosition = e.clientX - progressBar.getBoundingClientRect().left;
     const progressBarWidth = progressBar.clientWidth;
     const percentageClicked = clickPosition / progressBarWidth;
     audioRef.current.currentTime = percentageClicked * duration;
+  };
+
+  const handleNext = () => {
+    if (!tracks.length || !currentTrack) return;
+    
+    const currentIndex = tracks.findIndex(track => 
+      track.audioUrl === currentTrack.audioUrl
+    );
+    
+    if (currentIndex === -1) return;
+    
+    const nextIndex = (currentIndex + 1) % tracks.length;
+    setCurrentTrack(tracks[nextIndex]);
+    setIsPlaying(true); // Auto-play next track
+  };
+
+  const handlePrevious = () => {
+    if (!tracks.length || !currentTrack) return;
+    
+    const currentIndex = tracks.findIndex(track => 
+      track.audioUrl === currentTrack.audioUrl
+    );
+    
+    if (currentIndex === -1) return;
+    
+    const prevIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+    setCurrentTrack(tracks[prevIndex]);
+    setIsPlaying(true); // Auto-play previous track
   };
 
   return (
@@ -114,8 +124,14 @@ const Player = ({ currentTrack }) => {
 
         <div className="w-screen mt-3">
           <div className="flex mx-10 justify-between items-center">
-            <Artist />
-            <Play audioRef={audioRef} />
+            <Artist name={currentTrack?.artist || "Unknown Artist"} />
+            <Play 
+              audioRef={audioRef}
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
+              handleNext={handleNext}
+              handlePrevious={handlePrevious}
+            />
             <Sound audioRef={audioRef} />
           </div>
         </div>

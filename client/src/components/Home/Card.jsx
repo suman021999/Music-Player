@@ -1,9 +1,11 @@
 
+
+
 import React from 'react'
 import { FiPlayCircle } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
 
-const Card = ({ img, text, audioUrl, onClick, onPlay }) => {
+const Card = ({ img, text, audioUrl, onPlay }) => {
   const handlePlay = (e) => {
     e.stopPropagation();
     if (onPlay) {
@@ -18,12 +20,9 @@ const Card = ({ img, text, audioUrl, onClick, onPlay }) => {
   };
 
   return (
-    <div 
-      className="w-52 h-52 flex flex-col hover:rounded-md hover:bg-background group cursor-pointer"
-      onClick={() => onClick && onClick({ img, text, audioUrl })}
-    >
+    <div className="w-52 h-52 flex flex-col hover:rounded-md hover:bg-background group cursor-pointer">
       <div className='p-2 relative'>
-        <div className="h-36 bg-transparent  relative rounded-md overflow-hidden">
+        <div className="h-36 bg-transparent relative rounded-md overflow-hidden">
           {img && (
             <img 
               src={img} 

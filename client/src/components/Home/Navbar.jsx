@@ -55,7 +55,7 @@ const Navbar = ({ onFileSelect }) => {
       <div className="grid grid-cols-3 h-[15vh]">
         <div className="flex flex-col justify-center items-center text-3xl">
           <h1 className="text-4xl tracking-[6px] font-bold font-Poppins">Home</h1>
-          <p className="text-lg font-Poppins font-semibold">recent play</p>
+          {/* <p className="text-lg font-Poppins font-semibold">recent play</p> */}
         </div>
         <div></div>
 

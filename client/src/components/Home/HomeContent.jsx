@@ -3,11 +3,20 @@ import Card from "./Card";
 import axios from "axios";
 import Navbar from "./Navbar";
 
-const Home = () => {
+const Home = ({ setCurrentTrack }) => {
   const [musicList, setMusicList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
+
+   const handlePlayTrack = (track) => {
+    setCurrentTrack({
+      audioUrl: track.audioUrl,
+      duration: track.duration || 0,
+      title: track.text,
+      artist: "Unknown Artist"
+    });
+  };
 
   const fetchMusic = async () => {
     setLoading(true);
@@ -83,7 +92,8 @@ const Home = () => {
                       key={index} 
                       img={data.img || data.imageData} 
                       text={data.text || data.originalname}
-                      audioUrl={data.url || data.audioUrl}                     
+                      audioUrl={data.url || data.audioUrl}
+                      onPlay={handlePlayTrack}                     
                     />
                   ))
                 )}
@@ -97,3 +107,5 @@ const Home = () => {
 };
 
 export default Home;
+
+

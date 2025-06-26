@@ -13,11 +13,11 @@ const [currentTrack, setCurrentTrack] = useState(null);
         <div className='  grid grid-cols-5'>
           <Sidebar/>
           <Routes>
-            <Route path='/' element={<Homebar/>}/>
+            <Route path='/' element={<Homebar setCurrentTrack={setCurrentTrack}/>}/>
             <Route path='/playlist' element={<Playbar/>}/>
           </Routes>
         </div>
-        <Player currentTrack={currentTrack} />
+       <Player currentTrack={currentTrack} />
           
       </section>
     </>

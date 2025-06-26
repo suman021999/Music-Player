@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { MdSkipPrevious } from "react-icons/md";
 import { MdSkipNext } from "react-icons/md";
@@ -19,18 +18,29 @@ const Play = ({ audioRef, isPlaying, setIsPlaying, handleNext, handlePrevious })
 
   return (
     <div className='flex items-center w-56 mr-32'>
-      <button onClick={handlePrevious} className="text-2xl">
+      <button 
+        onClick={handlePrevious} 
+        className="text-2xl text-white hover:text-yellow-400 transition-colors"
+      >
         <MdSkipPrevious /> 
       </button>
       
       <button 
         onClick={togglePlay} 
-        className='border-[#3672b3] p-2 rounded-full border-4 flex items-center justify-center mx-4'
+        className='border-[#3672b3] p-2 rounded-full border-4 flex items-center justify-center mx-4
+        hover:border-yellow-400 transition-colors'
       >
-        {isPlaying ? <FaPause className='h-6 w-6' /> : <FaPlay className='h-6 w-6'/>}
+        {isPlaying ? (
+          <FaPause className='h-6 w-6 text-white' />
+        ) : (
+          <FaPlay className='h-6 w-6 text-white' />
+        )}
       </button>
       
-      <button onClick={handleNext} className="text-2xl">
+      <button 
+        onClick={handleNext} 
+        className="text-2xl text-white hover:text-yellow-400 transition-colors"
+      >
         <MdSkipNext />
       </button>
     </div>
