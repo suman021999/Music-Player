@@ -19,16 +19,16 @@ const Card = ({ img, text, audioUrl, onClick, onPlay }) => {
 
   return (
     <div 
-      className="w-52 h-52 flex flex-col hover:rounded-md bg-background group cursor-pointer"
+      className="w-52 h-52 flex flex-col hover:rounded-md hover:bg-background group cursor-pointer"
       onClick={() => onClick && onClick({ img, text, audioUrl })}
     >
       <div className='p-2 relative'>
-        <div className="h-36 bg-transparent relative rounded-md overflow-hidden">
+        <div className="h-36 bg-transparent  relative rounded-md overflow-hidden">
           {img && (
             <img 
               src={img} 
               alt={text} 
-              className="w-full h-full object-cover rounded-t-lg"
+              className="w-full h-full rounded-t-lg"
             />
           )}
           
