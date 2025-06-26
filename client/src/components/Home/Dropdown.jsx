@@ -1,7 +1,5 @@
 // import React, { useState, useRef } from "react";
 
-// // import axios from "axios";
-
 // const Dropdown = () => {
 //   const [audio, setAudio] = useState();
 //   const fileputRef = useRef(null);
@@ -45,20 +43,18 @@
 
 // export default Dropdown;
 
-
-import React, { useRef } from "react";
+import React from "react";
 
 const Dropdown = ({ onFileSelect }) => {
-  const fileInputRef = useRef(null);
+  const fileInputRef = React.useRef(null);
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      onFileSelect(file);
+    if (e.target.files[0]) {
+      onFileSelect(e.target.files[0]);
     }
   };
 
-  const handleClick = () => {
+  const triggerFileInput = () => {
     fileInputRef.current.click();
   };
 
@@ -68,21 +64,20 @@ const Dropdown = ({ onFileSelect }) => {
       id="menuitem"
     >
       <div className="p-1" role="none">
-        <a
-          href="#"
-          onClick={handleClick}
-          className="block px-4 py-2 text-sm hover:bg-stone-600 hover:rounded-lg"
+        <button
+          onClick={triggerFileInput}
+          className="block w-full text-left px-4 py-2 text-sm hover:bg-stone-600 hover:rounded-lg"
         >
           <h4 className="text-white">Open file(s)</h4>
           <p className="text-stone-400">Browse for files to play</p>
           <input
             type="file"
-            accept="audio/*"
             onChange={handleFileChange}
             ref={fileInputRef}
-            style={{ display: 'none' }}
+            className="hidden"
+            accept="audio/*"
           />
-        </a>
+        </button>
       </div>
     </div>
   );
