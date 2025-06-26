@@ -7,7 +7,7 @@ const musicSchema = new Schema(
       required: true,
     },
     imageData: {
-      type: String, // This will store base64 encoded image data or URL
+      type: String, 
       required: false,
     },
     text: {

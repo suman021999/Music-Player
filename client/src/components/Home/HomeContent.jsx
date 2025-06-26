@@ -3,7 +3,7 @@ import Card from "./Card";
 import axios from "axios";
 import Navbar from "./Navbar";
 
-const Home = ({ setCurrentTrack }) => {
+const Home = () => {
   const [musicList, setMusicList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -83,8 +83,7 @@ const Home = ({ setCurrentTrack }) => {
                       key={index} 
                       img={data.img || data.imageData} 
                       text={data.text || data.originalname}
-                      audioUrl={data.url || data.audioUrl}
-                      onClick={() => setCurrentTrack(data)}
+                      audioUrl={data.url || data.audioUrl}                     
                     />
                   ))
                 )}

@@ -19,7 +19,7 @@ const Navbar = ({ onFileSelect }) => {
     
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('audio', file);
       
       const response = await axios.post(
         `${import.meta.env.VITE_AUTH_URL}/upload`, 
@@ -42,7 +42,7 @@ const Navbar = ({ onFileSelect }) => {
       alert('Upload failed: ' + (error.response?.data?.message || error.message));
     } finally {
       setUploading(false);
-      e.target.value = ''; // Reset file input
+      e.target.value = '';
     }
   };
 

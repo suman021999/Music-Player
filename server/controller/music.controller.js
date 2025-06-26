@@ -6,7 +6,7 @@ import { Music } from '../models/music.model.js';
 
 export const uploadMusic = asyncHandler(async (req, res) => {
   try {
-    // Check if file exists
+   
     if (!req.file) {
       return res.status(400).json({ 
         success: false,
@@ -45,7 +45,7 @@ export const uploadMusic = asyncHandler(async (req, res) => {
     // Create music document in database
     const music = await Music.create({
       audioUrl: result.secure_url,
-      imageData: req.body.img || '', // Can be base64 or URL
+      imageData: req.body.img || '', 
       text: req.body.text || '',
       originalname: file.originalname,
       public_id: result.public_id,
