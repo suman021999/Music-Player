@@ -1,4 +1,5 @@
 
+
 // import React from 'react'
 // import { FiPlayCircle } from "react-icons/fi";
 // import { RiDeleteBinLine } from "react-icons/ri";
@@ -40,14 +41,11 @@
 //           </div>
 //         </div>
         
-//         <div className="h-16 bg-transparent">
-//           <p className="px-2 py-[2px] overflow-hidden text-sm">{text}</p>
-//           {audioUrl && (
-//             <audio controls className="w-full mt-2">
-//               <source src={audioUrl} type="audio/mpeg" />
-//               Your browser does not support the audio element.
-//             </audio>
-//           )}
+//         <div className="h-16 bg-transparent p-2">
+//           <p className="text-sm font-medium text-ellipsis overflow-hidden whitespace-nowrap">
+//             {text}
+//           </p>
+         
 //         </div>
 //       </div>
 //     </div>
@@ -56,15 +54,18 @@
 
 // export default Card;
 
+
+
 import React from 'react'
 import { FiPlayCircle } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
 
-const Card = ({ img, text, audioUrl }) => {
+const Card = ({ img, text, audioUrl, onClick, onPlay }) => {
   const handlePlay = (e) => {
     e.stopPropagation();
-    // You might want to implement play functionality here
-    console.log('Playing:', audioUrl);
+    if (onPlay) {
+      onPlay({ img, text, audioUrl });
+    }
   };
 
   const handleDelete = (e) => {
@@ -74,7 +75,10 @@ const Card = ({ img, text, audioUrl }) => {
   };
 
   return (
-    <div className="w-52 h-52 flex flex-col hover:rounded-md bg-background group">
+    <div 
+      className="w-52 h-52 flex flex-col hover:rounded-md bg-background group cursor-pointer"
+      onClick={() => onClick && onClick({ img, text, audioUrl })}
+    >
       <div className='p-2 relative'>
         <div className="h-36 bg-transparent relative rounded-md overflow-hidden">
           {img && (
@@ -101,12 +105,6 @@ const Card = ({ img, text, audioUrl }) => {
           <p className="text-sm font-medium text-ellipsis overflow-hidden whitespace-nowrap">
             {text}
           </p>
-          {audioUrl && (
-            <audio controls className="w-full mt-2">
-              <source src={audioUrl} type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </audio>
-          )}
         </div>
       </div>
     </div>
