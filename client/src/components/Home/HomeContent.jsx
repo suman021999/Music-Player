@@ -10,12 +10,12 @@ const Home = ({ setCurrentTrack }) => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handlePlayTrack = (track) => {
+const handlePlayTrack = (track) => {
   setCurrentTrack({
-    audioUrl: track.audioUrl,
+    audioUrl: track.audioUrl || track.url, // handle both url and audioUrl cases
     duration: track.duration || 0,
-    title: track.text,
-    artist: "Unknown Artist",
+    title: track.text || track.originalname,
+    artist: track.artist || "Unknown Artist",
     image: track.img || track.imageData // include the image
   });
 };

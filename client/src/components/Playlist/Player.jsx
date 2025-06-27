@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import Artist from "./Artist";
 import Sound from "./Sound";
@@ -9,6 +10,7 @@ const Player = ({ currentTrack, tracks = [], setCurrentTrack }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
   const progressRef = useRef(null);
+
   useEffect(() => {
     if (audioRef.current && currentTrack) {
       audioRef.current.src = currentTrack.audioUrl;
@@ -21,7 +23,6 @@ const Player = ({ currentTrack, tracks = [], setCurrentTrack }) => {
       audioRef.current.addEventListener("timeupdate", updateTime);
       audioRef.current.addEventListener("loadedmetadata", updateTime);
 
-      // Auto-play when track changes
       const playAudio = async () => {
         try {
           await audioRef.current.play();
@@ -76,7 +77,7 @@ const Player = ({ currentTrack, tracks = [], setCurrentTrack }) => {
 
     const nextIndex = (currentIndex + 1) % tracks.length;
     setCurrentTrack(tracks[nextIndex]);
-    setIsPlaying(true); // Auto-play next track
+    setIsPlaying(true);
   };
 
   const handlePrevious = () => {
@@ -90,7 +91,7 @@ const Player = ({ currentTrack, tracks = [], setCurrentTrack }) => {
 
     const prevIndex = (currentIndex - 1 + tracks.length) % tracks.length;
     setCurrentTrack(tracks[prevIndex]);
-    setIsPlaying(true); // Auto-play previous track
+    setIsPlaying(true);
   };
 
   const handleProgressChange = (e) => {
@@ -102,18 +103,15 @@ const Player = ({ currentTrack, tracks = [], setCurrentTrack }) => {
 
   return (
     <>
-      {/* Hidden audio element */}
       <audio ref={audioRef} />
 
       <div className="text-color h-[15vh] w-full bg-background text-3xl">
         <div className="flex justify-center">
           <div className="flex items-center justify-center gap-4 mx-auto mt-4 w-full px-4">
-            {/* Current time */}
             <span className="text-xs text-white w-10 text-right">
               {formatTime(currentTime)}
             </span>
 
-            {/* Progress bar */}
             <div
               className="relative flex-1 h-1 bg-[#4b4848cb] rounded-full cursor-pointer group"
               onClick={handleProgressClick}
@@ -123,7 +121,6 @@ const Player = ({ currentTrack, tracks = [], setCurrentTrack }) => {
                 className="absolute h-full bg-blue-700 rounded-full"
                 style={{ width: `${(currentTime / duration) * 100 || 0}%` }}
               >
-                {/* Thumb element */}
                 <div className="absolute right-0 top-1/2 w-5 h-5 bg-blue-700 rounded-full -translate-y-1/2 translate-x-1/2 transition-opacity" />
               </div>
               <input
@@ -136,7 +133,6 @@ const Player = ({ currentTrack, tracks = [], setCurrentTrack }) => {
               />
             </div>
 
-            {/* Duration */}
             <span className="text-xs text-white w-10 text-left">
               {formatTime(duration)}
             </span>
@@ -145,10 +141,11 @@ const Player = ({ currentTrack, tracks = [], setCurrentTrack }) => {
 
         <div className="w-screen mt-3">
           <div className="flex mx-10 justify-between items-center">
-             <Artist 
+            <Artist 
               img={currentTrack?.image} 
               title={currentTrack?.title} 
-              name={currentTrack?.artist || "Unknown Artist"} 
+              name={currentTrack?.artist || "Unknown Artist"}
+              isPlaying={isPlaying}  // Pass the isPlaying state
             />
             <Play
               audioRef={audioRef}
