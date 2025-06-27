@@ -42,16 +42,3 @@
   animation: spin-slow 3s linear infinite;
 }
 
-.cdplayer::before{
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 16px;
-  height: 16px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius:100%;
-  border: 2px solid white;
-  translate: 50% 50%;
-}
-/* absolute top-1/2 left-1/2 w-4 h-4 bg-black/70 rounded-full border-2 border-white -translate-x-1/2 -translate-y-1/2 pointer-events-none */
