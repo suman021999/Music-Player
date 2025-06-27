@@ -17,7 +17,7 @@ const Play = ({ audioRef, isPlaying, setIsPlaying, handleNext, handlePrevious })
   };
 
   return (
-    <div className='flex items-center w-56 mr-32'>
+    <div className='flex items-center w-56 mr-64'>
       <button 
         onClick={handlePrevious} 
         className="text-2xl text-white hover:text-blue-400 transition-colors"

@@ -1,17 +1,33 @@
 import React from 'react'
 
-const Artist = () => {
+const Artist = ({ img, title, name }) => {
   return (
-    <div className='bg-red-300 p-2  w-[500px] flex   flex-row gap-4'>
-      <img  className='w-12 h-12 rounded-full' src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3MDk3MzR8MHwxfHNlYXJjaHwxfHxjYXRzfGVufDB8fHx8MTczOTczNjQ3M3ww&ixlib=rb-4.0.3&q=80&w=1080" alt="" />
+    <div className='p-2 w-[600px] flex flex-row gap-4 hover:bg-background2/20 items-center'>
 
-     <div className='flex  justify-center flex-col'>
-      <h2 className='text-lg'>titel</h2>
-      <p className='text-sm'>stroyline</p>
-
+      {img ? (
+        <img 
+          className='w-12 h-12 rounded-full object-cover' 
+          src={img} 
+          alt={title || "Track cover"} 
+        />
+      ) : (
+        <div className='w-12 h-12 rounded-full bg-gray-500 flex items-center justify-center'>
+          <span className='text-white text-xs'>No Image</span>
+        </div>
+      )}
+      
+      <div className='flex justify-center flex-col  overflow-hidden '>
+        <h2 className='text-lg font-medium text-white text-ellipsis overflow-hidden whitespace-nowrap '>
+          {title || "Unknown Track"}
+        </h2>
+        <p className='text-sm text-gray-200 text-ellipsis overflow-hidden whitespace-nowrap'>
+          {name || "Unknown Artist"}
+        </p>
       </div>
     </div>
-  )
-}
+  );
+};
+
+
 
 export default Artist
