@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import axios from "axios";
@@ -12,11 +11,11 @@ const Home = ({ setCurrentTrack }) => {
 
 const handlePlayTrack = (track) => {
   setCurrentTrack({
-    audioUrl: track.audioUrl || track.url, // handle both url and audioUrl cases
+    audioUrl: track.audioUrl || track.url, 
     duration: track.duration || 0,
     title: track.text || track.originalname,
     artist: track.artist || "Unknown Artist",
-    image: track.img || track.imageData // include the image
+    image: track.img || track.imageData 
   });
 };
 
@@ -126,3 +125,6 @@ const handlePlayTrack = (track) => {
 };
 
 export default Home;
+
+
+
