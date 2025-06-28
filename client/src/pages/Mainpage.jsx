@@ -7,7 +7,7 @@ import Playbar from './PBar';
 import { Routes, Route } from 'react-router-dom';
 
 const Mainpage = () => {
-  const [currentTrack, setCurrentTrack] = useState(null); // track state
+  const [currentTrack, setCurrentTrack] = useState(null);
 
   return (
     <section className='h-screen text-color font-Poppins bg-background'>

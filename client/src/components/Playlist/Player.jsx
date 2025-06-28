@@ -11,7 +11,7 @@ const Player = ({ currentTrack, setCurrentTrack, tracks = [] }) => {
 
   // Load last track from localStorage on mount
   useEffect(() => {
-    const savedTrack = localStorage.getItem('currentTrack');
+    const savedTrack = localStorage.getItem("currentTrack");
     if (savedTrack) {
       setCurrentTrack(JSON.parse(savedTrack));
     }
@@ -20,11 +20,12 @@ const Player = ({ currentTrack, setCurrentTrack, tracks = [] }) => {
   // Save currentTrack to localStorage whenever it changes
   useEffect(() => {
     if (currentTrack) {
-      localStorage.setItem('currentTrack', JSON.stringify(currentTrack));
+      localStorage.setItem("currentTrack", JSON.stringify(currentTrack));
     }
   }, [currentTrack]);
 
   // When currentTrack updates, set up audio source and auto-play
+
   useEffect(() => {
     if (audioRef.current && currentTrack) {
       audioRef.current.src = currentTrack.audioUrl;
@@ -39,10 +40,13 @@ const Player = ({ currentTrack, setCurrentTrack, tracks = [] }) => {
 
       const playAudio = async () => {
         try {
-          await audioRef.current.play();
-          setIsPlaying(true);
+          const playPromise = audioRef.current.play();
+          if (playPromise !== undefined) {
+            await playPromise;
+            setIsPlaying(true);
+          }
         } catch (error) {
-          console.error("Autoplay prevented:", error);
+          setIsPlaying(false);
         }
       };
 
@@ -175,15 +179,15 @@ const Player = ({ currentTrack, setCurrentTrack, tracks = [] }) => {
               isPlaying={isPlaying}
             />
             {/* Play/Pause and controls */}
-            
-              <Play
-                  audioRef={audioRef}
-                  isPlaying={isPlaying}
-                  setIsPlaying={setIsPlaying}
-                  handleNext={handleNext}
-                  handlePrevious={handlePrevious}
-              />
-            
+
+            <Play
+              audioRef={audioRef}
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
+              handleNext={handleNext}
+              handlePrevious={handlePrevious}
+            />
+
             {/* Volume or other controls */}
             <Sound audioRef={audioRef} />
           </div>
