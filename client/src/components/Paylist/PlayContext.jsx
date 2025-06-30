@@ -2,7 +2,7 @@ import React from "react";
 import Player from "../../../public/player.png";
 import { GoPlus } from "react-icons/go";
 
-const PlayContext = () => {
+const Playlist= () => {
   return (
     <>
       <section className="text-color h-[65vh] overflow-hidden flex justify-center items-center w-[80vw]">
@@ -25,4 +25,6 @@ const PlayContext = () => {
   );
 };
 
-export default PlayContext;
+export default Playlist;
+
+

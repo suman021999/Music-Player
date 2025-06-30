@@ -125,6 +125,3 @@ const handlePlayTrack = (track) => {
 };
 
 export default Home;
-
-
-
