@@ -129,14 +129,17 @@ function Sidebar({ onSearch }) {
       <div className="flex justify-center items-center w-full mt-4">
         {isOpen ? (
           <div className="relative w-[18vw]">
+            <div className="bg-[#807d7d75]  w-full p-6 flex items-center  h-8   text-sm rounded-lg shadow-lg focus:outline-none overflow-hidden">
             <input
               type="text"
               value={localSearchQuery}
               onChange={handleSearchChange}
-              className="bg-[#807d7d75] w-full p-6 h-8 text-white text-sm rounded-lg shadow-lg focus:outline-none"
+              className="bg-transparent focus:outline-none  w-52"
               placeholder="Search music..."
             />
-            <CiSearch className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#514e4e4c] hover:bg-[#514e4e9a] p-2 rounded-lg" />
+            </div>
+            
+            <CiSearch className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#7975754c] hover:bg-[#6c6969c3] p-2 rounded-lg" />
           </div>
         ) : (
           <div className="flex justify-center w-full">
