@@ -1,16 +1,16 @@
-// import React from "react";
-// import Playlist from "../components/Paylist/PlayContext";
-// import Pnavbar from "../components/Paylist/Pnavbar";
+import React from "react";
+import Playlist from "../components/Paylist/PlayContext";
+import Pnavbar from "../components/Paylist/Pnavbar";
 
-// const PBar = () => {
-//   return (
-//     <>
-//       <section className="h-[85vh] w-[80vw] ">
-//         <Pnavbar />
-//         <Playlist />
-//       </section>
-//     </>
-//   );
-// };
+const PBar = () => {
+  return (
+    <>
+      <section className="h-[85vh] w-[80vw] ">
+        <Pnavbar />
+        <Playlist />
+      </section>
+    </>
+  );
+};
 
-// export default PBar;
+export default PBar;
