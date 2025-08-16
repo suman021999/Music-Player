@@ -42,3 +42,14 @@
   animation: spin-slow 3s linear infinite;
 }
 
+/* Add this to your global CSS */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #4a4545;
+}
+::-webkit-scrollbar-thumb {
+  background: #6a6363;
+  border-radius: 4px;
+}

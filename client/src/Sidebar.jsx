@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { GoHome } from "react-icons/go";
+import { MdOutlineFeaturedPlayList } from "react-icons/md";
+import Searchbar from "./components/searchbar/Searchbar";
 
 function Sidebar({ onSearch }) {
   const [isOpen, setIsOpen] = useState(true);
@@ -33,6 +35,7 @@ function Sidebar({ onSearch }) {
 
       {/* Search Section */}
       <div className="flex justify-center items-center w-full mt-4">
+
         {isOpen ? (
           <div className="relative w-[18vw]">
             <div className="bg-[#807d7d75]  w-full p-6 flex items-center  h-8   text-sm rounded-lg shadow-lg focus:outline-none overflow-hidden">
@@ -52,6 +55,7 @@ function Sidebar({ onSearch }) {
             <CiSearch className="cursor-pointer hover:text-[#b6acac]" onClick={toggleSidebar}/>
           </div>
         )}
+        <Searchbar/>
       </div>
 
       {/* Home Section */}
@@ -78,12 +82,12 @@ function Sidebar({ onSearch }) {
             to="/playlist"
             className="bg-[#807d7d75] w-[18vw] p-6 h-8 text-white text-sm flex items-center rounded-lg shadow-lg focus:outline-none"
           >
-            <GoHome className="mr-2" />
+            <MdOutlineFeaturedPlayList className="mr-2" />
             playlist
           </Link>
         ) : (
           <div className="flex justify-center w-full">
-            <Link to="/playlist"><GoHome className="cursor-pointer hover:text-[#b6acac]"/></Link>
+            <Link to="/playlist"><MdOutlineFeaturedPlayList className="cursor-pointer hover:text-[#b6acac]"/></Link>
           </div>
         )}
       </div>
