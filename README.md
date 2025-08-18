@@ -1,10 +1,10 @@
 ## Screenshots
 
 ### Home Screen
-![Home Screen](public/images/Home.png)
+![Home Screen](/client/public/Home.png)
 
 ### Playlist Screen
-![Playlist Screen](public/images/playlist.png)
+![Playlist Screen](/client/public/playlist.png)
 
 
 
