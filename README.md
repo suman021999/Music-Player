@@ -31,7 +31,7 @@ Setup Instructions
 Clone the repository:
 
 bash
-git clone [https://github.com/yourusername/music-player-mern.git](https://github.com/suman021999/Music-Player)
+git clone https://github.com/suman021999/Music-Player
 cd music-player-mern
 Install dependencies:
 
