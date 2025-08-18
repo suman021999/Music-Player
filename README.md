@@ -1,3 +1,13 @@
+## Screenshots
+
+### Home Screen
+![Home Screen](public/images/Home.png)
+
+### Playlist Screen
+![Playlist Screen](public/images/playlist.png)
+
+
+
 � Music Player App - README
 📝 Overview
 A full-stack music player application built with the MERN stack (MongoDB, Express.js, React, and Node.js) that allows users to browse and play music tracks, create playlists, and manage their music library.
