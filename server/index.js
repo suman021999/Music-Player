@@ -13,7 +13,7 @@ database()
 
 app.use(
     cors({
-      origin:  "http://localhost:5173", //process.env.Frontend_URL ||
+      origin:  "http://localhost:5174", //process.env.Frontend_URL ||
       credentials: true,
     })
   );
